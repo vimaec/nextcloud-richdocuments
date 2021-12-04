@@ -12,6 +12,7 @@
 namespace OCA\Richdocuments\Controller;
 
 use OCA\Richdocuments\Capabilities;
+use OCA\Richdocuments\Exception\InvalidDiscoveryException;
 use OCA\Richdocuments\Service\BuiltInProxyService;
 use OCA\Richdocuments\Service\CapabilitiesService;
 use OCA\Richdocuments\Service\DemoService;
@@ -185,11 +186,11 @@ class SettingsController extends Controller{
 					}
 				}
 			}
-		} catch (\Exception $e){
+		} catch (InvalidDiscoveryException $e){
 			if ($wopi_url !== null) {
 				return new JSONResponse([
 					'status' => 'error',
-					'data' => ['message' => 'Failed to connect to the remote server']
+					'data' => ['message' => 'Failed to connect to the remote server: ' . $e->getHint()]
 				], 500);
 			}
 		}
