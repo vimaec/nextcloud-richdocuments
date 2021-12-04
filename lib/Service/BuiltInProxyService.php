@@ -102,7 +102,7 @@ class BuiltInProxyService {
 
 				if ($response->getStatusCode() === 200) {
 					$body = json_decode($response->getBody(), true);
-					return $body['status'];
+					return $body['status'] ?? 'error';
 				}
 			} catch (Exception $e) {
 			}

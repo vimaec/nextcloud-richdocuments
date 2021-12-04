@@ -20,7 +20,6 @@
  *
  */
 import axios from '@nextcloud/axios'
-import { getCapabilities } from '@nextcloud/capabilities'
 import { getAppCapabilities } from './capabilities'
 
 export const LOADING_ERROR = {
@@ -29,18 +28,16 @@ export const LOADING_ERROR = {
 }
 
 export const isCollaboraConfigured = () => {
-	const collaboraCapabilities = getCapabilities()?.richdocuments?.collabora
+	const collaboraCapabilities = getAppCapabilities()?.richdocuments?.collabora
 	return isBuiltinCodeServerUsed() || collaboraCapabilities.length !== 0
 }
 
 export const isBuiltinCodeServerUsed = () => {
-	const richdocumentsCapabilities = getCapabilities()?.richdocuments
-	return richdocumentsCapabilities?.config?.wopi_url?.indexOf('proxy.php') !== -1
+	return getAppCapabilities()?.config?.wopi_url?.indexOf('proxy.php') !== -1
 }
 
 export const checkCollaboraConfiguration = async() => {
-	const capabilitites = await getAppCapabilities()
-	const wopiUrl = capabilitites?.config?.wopi_url
+	const wopiUrl = getAppCapabilities()?.config?.wopi_url
 	if (!wopiUrl) {
 		throw Error(LOADING_ERROR.COLLABORA_UNCONFIGURED)
 	}

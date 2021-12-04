@@ -359,6 +359,7 @@ import SettingsInputText from './SettingsInputText'
 import SettingsSelectTag from './SettingsSelectTag'
 import SettingsSelectGroup from './SettingsSelectGroup'
 import SettingsExternalApps from './SettingsExternalApps'
+import { getAppCapabilities } from '../services/capabilities'
 
 const SERVER_STATE_OK = 0
 const SERVER_STATE_LOADING = 1
@@ -386,9 +387,8 @@ export default {
 		return {
 			productName: loadState('richdocuments', 'productName', 'Nextcloud Office'),
 			hasNextcloudBranding: loadState('richdocuments', 'hasNextcloudBranding', true),
-
 			serverMode: '',
-			serverError: Object.values(OC.getCapabilities().richdocuments.collabora).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR,
+			serverError: Object.values(getAppCapabilities().collabora).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR,
 			hostErrors: [window.location.host === 'localhost' || window.location.host === '127.0.0.1', window.location.protocol !== 'https:', false],
 			demoServers: null,
 			CODEInstalled: 'richdocumentscode' in OC.appswebroots,
@@ -445,7 +445,7 @@ export default {
 				const protocol = this.checkUrlProtocol(newVal)
 				const nextcloudProtocol = this.checkUrlProtocol(window.location.href)
 				if (protocol !== nextcloudProtocol) this.serverError = PROTOCOL_MISMATCH
-				else this.serverError = Object.values(OC.getCapabilities().richdocuments.collabora).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR
+				else this.serverError = Object.values(getAppCapabilities().collabora).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR
 			}
 		},
 	},
