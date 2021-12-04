@@ -359,7 +359,10 @@ import SettingsInputText from './SettingsInputText'
 import SettingsSelectTag from './SettingsSelectTag'
 import SettingsSelectGroup from './SettingsSelectGroup'
 import SettingsExternalApps from './SettingsExternalApps'
-import { getAppCapabilities } from '../services/capabilities'
+import {
+	fetchAppCapabilities,
+	getAppCapabilities,
+} from '../services/capabilities'
 
 const SERVER_STATE_OK = 0
 const SERVER_STATE_LOADING = 1
@@ -568,15 +571,17 @@ export default {
 					wopi_url: this.settings.wopi_url,
 					disable_certificate_verification: this.settings.disable_certificate_verification,
 				})
-				this.serverError = SERVER_STATE_OK
+				await fetchAppCapabilities()
 			} catch (e) {
 				console.error(e)
 				this.serverError = SERVER_STATE_CONNECTION_ERROR
 				if (e.response.data.hint === 'missing_capabilities') {
 					OCP.Toast.warning('Could not connect to the /hosting/capabilities endpoint. Please check if your webserver configuration is up to date.')
 				}
+				return
 			}
 			this.checkIfDemoServerIsActive()
+			this.serverError = SERVER_STATE_OK
 		},
 		async updateSettings(data) {
 			this.updating = true
