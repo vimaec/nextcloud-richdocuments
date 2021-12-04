@@ -172,9 +172,10 @@ class SettingsController extends Controller{
 			$this->appConfig->setAppValue('canonical_webroot', $canonical_webroot);
 		}
 
-		$this->discoveryManager->refetch();
-		$this->capabilitiesService->clear();
 		try {
+			$this->discoveryManager->refetch();
+			$this->capabilitiesService->clear();
+
 			$capaUrlSrc = $this->wopiParser->getUrlSrc('Capabilities');
 			if (is_array($capaUrlSrc) && $capaUrlSrc['action'] === 'getinfo') {
 				$public_wopi_url = str_replace('/hosting/capabilities', '', $capaUrlSrc['urlsrc']);
@@ -186,11 +187,15 @@ class SettingsController extends Controller{
 					}
 				}
 			}
-		} catch (InvalidDiscoveryException $e){
+		} catch (\Exception $e){
 			if ($wopi_url !== null) {
 				return new JSONResponse([
 					'status' => 'error',
-					'data' => ['message' => 'Failed to connect to the remote server: ' . $e->getHint()]
+					'data' => [
+						'message' => 'Failed to connect to the remote server',
+						// Returning the raw exception message is ok here as this is only callable by admins
+						'hint' => [ $e->getMessage() ]
+					]
 				], 500);
 			}
 		}
@@ -200,7 +205,12 @@ class SettingsController extends Controller{
 		if ($this->capabilitiesService->getCapabilities() === []) {
 			return new JSONResponse([
 				'status' => 'error',
-				'data' => ['message' => 'Failed to connect to the remote server', 'hint' => 'missing_capabilities']
+				'data' => [
+					'message' => 'Failed to connect to the remote server',
+					'hint' => [
+						$this->l10n->t('Could not connect to the /hosting/capabilities endpoint. Please check if your webserver configuration is up to date.')
+					]
+				]
 			], 500);
 		}
 

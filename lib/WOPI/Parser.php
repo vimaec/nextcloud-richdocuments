@@ -46,7 +46,7 @@ class Parser {
 		}
 
 		if (!$discoveryParsed) {
-			throw new InvalidDiscoveryException('Could not parse discovery XML');
+			throw new InvalidDiscoveryException('Invalid response for /hosting/discovery endpoint: Could not be parsed as XML');
 		}
 
 		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone/app[@name=\'%s\']/action', $mimetype));
@@ -57,6 +57,6 @@ class Parser {
 			];
 		}
 
-		throw new InvalidDiscoveryException('Could not find urlsrc in WOPI');
+		throw new InvalidDiscoveryException('Invalid response for /hosting/discovery endpoint: Could not find urlsrc in WOPI');
 	}
 }

@@ -6,8 +6,8 @@ use OCP\HintException;
 
 class InvalidDiscoveryException extends HintException {
 
-	public function __construct($hint = '', $code = 0, \Exception $previous = null) {
-		parent::__construct('Unable to handle discovery response', $hint, $code, $previous);
+	public function __construct($message = '', $code = 0, \Exception $previous = null) {
+		parent::__construct($message, 'Unable to reach the Office server', $code, $previous);
 	}
 
 }

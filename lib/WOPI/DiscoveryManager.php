@@ -21,6 +21,7 @@
 
 namespace OCA\Richdocuments\WOPI;
 
+use GuzzleHttp\Exception\GuzzleException;
 use OCA\Richdocuments\Service\BuiltInProxyService;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
@@ -69,7 +70,7 @@ class DiscoveryManager {
 
 	/**
 	 * @return \OCP\Http\Client\IResponse
-	 * @throws \Exception
+	 * @throws GuzzleException
 	 */
 	public function fetchFromRemote() {
 		$remoteHost = $this->config->getAppValue('richdocuments', 'wopi_url');
