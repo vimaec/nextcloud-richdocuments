@@ -11,18 +11,19 @@
 
 namespace OCA\Richdocuments\Controller;
 
+use OCA\Richdocuments\Capabilities;
+use OCA\Richdocuments\Service\BuiltInProxyService;
 use OCA\Richdocuments\Service\CapabilitiesService;
 use OCA\Richdocuments\Service\DemoService;
 use OCA\Richdocuments\WOPI\DiscoveryManager;
 use OCA\Richdocuments\WOPI\Parser;
-use \OCP\AppFramework\Controller;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
-use OCP\ILogger;
-use \OCP\IRequest;
-use \OCP\IL10N;
+use OCP\IRequest;
+use OCP\IL10N;
 use OCA\Richdocuments\AppConfig;
 use OCP\IConfig;
 use OCP\PreConditionNotMetException;
@@ -44,8 +45,8 @@ class SettingsController extends Controller{
 	private $capabilitiesService;
 	/** @var DemoService */
 	private $demoService;
-	/** @var ILogger */
-	private $logger;
+	/** @var BuiltInProxyService */
+	private $builtInProxyService;
 
 	public function __construct($appName,
 		IRequest $request,
@@ -56,7 +57,7 @@ class SettingsController extends Controller{
 		Parser $wopiParser,
 		CapabilitiesService $capabilitiesService,
 		DemoService $demoService,
-		ILogger $logger,
+		BuiltInProxyService $builtInProxyService,
 		$userId
 	) {
 		parent::__construct($appName, $request);
@@ -67,27 +68,27 @@ class SettingsController extends Controller{
 		$this->wopiParser = $wopiParser;
 		$this->capabilitiesService = $capabilitiesService;
 		$this->demoService = $demoService;
-		$this->logger = $logger;
+		$this->builtInProxyService = $builtInProxyService;
 		$this->userId = $userId;
 	}
 
 	/**
 	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @throws \Exception
+	 *
+	 * Endpoint that will return capabilities based on the current server status
+	 * this is called by the frontend before any content is loaded, so it is also used
+	 * to autoconfigure the built-in CODE proxy and wait for its starting if required
 	 */
-	public function checkSettings() {
-		try {
-			$response = $this->discoveryManager->fetchFromRemote();
-		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'richdocuments']);
-			return new DataResponse([
-				'status' => $e->getCode(),
-				'message' => 'Could not fetch discovery details'
-			], Http::STATUS_INTERNAL_SERVER_ERROR);
+	public function checkSetup(): DataResponse {
+		if ($this->builtInProxyService->checkAndEnableCODEServer()) {
+			$this->discoveryManager->refetch();
+			$this->capabilitiesService->clear();
+			$this->capabilitiesService->refetch();
 		}
 
-		return new DataResponse();
+		/** @var Capabilities $capabilities */
+		$capabilities = \OC::$server->get(Capabilities::class);
+		return new DataResponse($capabilities->getCapabilities());
 	}
 
 	public function demoServers() {

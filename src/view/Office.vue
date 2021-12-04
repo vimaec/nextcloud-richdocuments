@@ -77,7 +77,11 @@ import { basename, dirname } from 'path'
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage.tsx'
 import FilesAppIntegration from './FilesAppIntegration'
-import { LOADING_ERROR, checkCollaboraConfiguration, checkProxyStatus } from '../services/collabora'
+import {
+	LOADING_ERROR,
+	checkCollaboraConfiguration,
+	checkProxyStatus,
+} from '../services/collabora'
 const FRAME_DOCUMENT = 'FRAME_DOCUMENT'
 const PostMessages = new PostMessageService({
 	FRAME_DOCUMENT: () => document.getElementById('collaboraframe').contentWindow,
