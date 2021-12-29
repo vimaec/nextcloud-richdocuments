@@ -36,4 +36,7 @@ if (OCA.Viewer) {
 		component: Office,
 		theme: 'light',
 	})
+	console.error('richdocuments:cypress registered handlers')
+} else {
+	console.error('richdocuments:cypress no OCA.Viewer')
 }
