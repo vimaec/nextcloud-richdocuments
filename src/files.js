@@ -1,6 +1,7 @@
 import '../css/filetypes.scss'
 import '../css/files.scss'
 
+import $ from 'jquery'
 import { emit } from '@nextcloud/event-bus'
 import { getDocumentUrlFromTemplate, getDocumentUrlForPublicFile, getDocumentUrlForFile } from './helpers/url'
 import PostMessageService from './services/postMessage.tsx'

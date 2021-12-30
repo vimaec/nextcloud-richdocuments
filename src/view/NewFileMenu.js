@@ -20,6 +20,7 @@
  *
  */
 
+import $ from 'jquery'
 import Types from '../helpers/types'
 
 /** @type OC.Plugin */

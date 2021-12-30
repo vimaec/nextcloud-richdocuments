@@ -20,6 +20,7 @@
  *
  */
 
+import $ from 'jquery'
 import Preload from '../services/preload'
 import { splitPath } from '../helpers'
 import Types from '../helpers/types'

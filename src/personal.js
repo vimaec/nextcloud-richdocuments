@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import '../css/admin.scss'
 
 $(function() {
