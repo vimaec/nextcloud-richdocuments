@@ -349,6 +349,7 @@
 
 <script>
 import Vue from 'vue'
+import { showWarning } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
@@ -573,7 +574,7 @@ export default {
 				console.error(e)
 				this.serverError = SERVER_STATE_CONNECTION_ERROR
 				if (e.response.data.hint === 'missing_capabilities') {
-					OCP.Toast.warning('Could not connect to the /hosting/capabilities endpoint. Please check if your webserver configuration is up to date.')
+					showWarning('Could not connect to the /hosting/capabilities endpoint. Please check if your webserver configuration is up to date.')
 				}
 			}
 			this.checkIfDemoServerIsActive()

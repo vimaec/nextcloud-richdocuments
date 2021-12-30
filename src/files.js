@@ -2,6 +2,7 @@ import '../css/filetypes.scss'
 import '../css/files.scss'
 
 import $ from 'jquery'
+import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import { getDocumentUrlFromTemplate, getDocumentUrlForPublicFile, getDocumentUrlForFile } from './helpers/url'
 import PostMessageService from './services/postMessage.tsx'
@@ -114,14 +115,10 @@ const odfViewer = {
 							? `<a href="${setupUrl}">Collabora Online is not setup yet. <br />Click here to configure your own server or connect to a demo server.</a>`
 							: t('richdocuments', 'Collabora Online is not setup yet. Please contact your administrator.')
 
-						if (OCP.Toast) {
-							OCP.Toast.error(installHint, {
-								isHTML: true,
-								timeout: 0,
-							})
-						} else {
-							OC.Notification.showHtml(installHint)
-						}
+						showError(installHint, {
+							isHTML: true,
+							timeout: 0,
+						})
 					}
 				}
 			)
@@ -133,7 +130,7 @@ const odfViewer = {
 		odfViewer.open = true
 		if (context) {
 			if (context?.$file?.attr('data-mounttype') === 'external-session') {
-				OCP.Toast.error(t('richdocuments', 'Opening the file is not supported, since the credentials for the external storage are not available without a session'), {
+				showError(t('richdocuments', 'Opening the file is not supported, since the credentials for the external storage are not available without a session'), {
 					timeout: 0,
 				})
 				odfViewer.open = false
@@ -290,7 +287,7 @@ const odfViewer = {
 				...FilesAppIntegration.loggingContext(),
 			})
 			odfViewer.onClose()
-			OC.Notification.showTemporary(t('richdocuments', 'Failed to load {productName} - please try again later', { productName: OC.getCapabilities().richdocuments.productName || 'Collabora Online' }))
+			showError(t('richdocuments', 'Failed to load {productName} - please try again later', { productName: OC.getCapabilities().richdocuments.productName || 'Collabora Online' }))
 		} else if (!odfViewer.receivedLoading) {
 			odfViewer.loadingTimeout = setTimeout(odfViewer.onTimeout,
 				(OC.getCapabilities().richdocuments.config.timeout * 1000 || 15000))
@@ -412,7 +409,7 @@ $(document).ready(function() {
 					...FilesAppIntegration.loggingContext(),
 				})
 				odfViewer.onClose()
-				OC.Notification.showTemporary(t('richdocuments', 'Failed to connect to {productName}. Please try again later or contact your server administrator.',
+				showError(t('richdocuments', 'Failed to connect to {productName}. Please try again later or contact your server administrator.',
 					{ productName: OC.getCapabilities().richdocuments.productName }
 				))
 			}
