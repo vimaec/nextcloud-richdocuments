@@ -22,6 +22,7 @@
 
 import $ from 'jquery'
 import { getCurrentUser } from '@nextcloud/auth'
+import moment from '@nextcloud/moment'
 import { generateUrl, linkToRemoteBase } from '@nextcloud/router'
 import Preload from '../services/preload'
 import { splitPath } from '../helpers'
@@ -441,7 +442,7 @@ export default {
 			$('.tab.versionsTabView').prepend('<ul id="currentVersion"><li data-revision="" class="active"><div><div class="preview-container"><img src="' + preview + '" width="44" /></div><div class="version-container">\n'
 				+ '<div><a class="downloadVersion">' + t('richdocuments', 'Current version (unsaved changes)') + '</a></div></div></li></ul>')
 			$('.live-relative-timestamp').each(function() {
-				$(this).text(OC.Util.relativeModifiedDate(parseInt($(this).attr('data-timestamp'), 10)))
+				$(this).text(moment(parseInt($(this).attr('data-timestamp'), 10)).fromNow())
 			})
 		}
 	},
