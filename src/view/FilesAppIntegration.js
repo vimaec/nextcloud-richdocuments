@@ -21,6 +21,8 @@
  */
 
 import $ from 'jquery'
+import { getCurrentUser } from '@nextcloud/auth'
+import { generateUrl, linkToRemoteBase } from '@nextcloud/router'
 import Preload from '../services/preload'
 import { splitPath } from '../helpers'
 import Types from '../helpers/types'
@@ -151,7 +153,7 @@ export default {
 			const filename = path.substring(path.lastIndexOf('/') + 1)
 			$.ajax({
 				type: 'POST',
-				url: OC.generateUrl('apps/richdocuments/assets'),
+				url: generateUrl('apps/richdocuments/assets'),
 				data: {
 					path,
 				},
@@ -389,7 +391,7 @@ export default {
 			view.UserName = view.UserName !== '' ? view.UserName : t('richdocuments', 'Guest')
 			popover.find('ul').append(this._userEntry(view))
 
-			if (view.UserId === OC.currentUser) {
+			if (view.UserId === getCurrentUser()?.uid) {
 				continue
 			}
 			if (view.UserId !== '' && users.indexOf(view.UserId) > -1) {
@@ -512,13 +514,13 @@ export default {
 	},
 
 	_restoreDAV(version) {
-		const restoreUrl = OC.linkToRemoteBase('dav') + '/versions/' + OC.getCurrentUser().uid
+		const restoreUrl = linkToRemoteBase('dav') + '/versions/' + getCurrentUser().uid
 			+ '/versions/' + this.fileId + '/' + version
 		$.ajax({
 			type: 'MOVE',
 			url: restoreUrl,
 			headers: {
-				Destination: OC.linkToRemote('dav') + '/versions/' + OC.getCurrentUser().uid + '/restore/target',
+				Destination: linkToRemoteBase('dav') + '/versions/' + getCurrentUser().uid + '/restore/target',
 			},
 			success: this._restoreSuccess.bind(this),
 			error: this._restoreError.bind(this),
@@ -549,7 +551,7 @@ export default {
 						type = 'document'
 					}
 					const dir = parent.$('#dir').val()
-					const url = OC.generateUrl('/apps/files/?dir=' + dir + '&richdocuments_create=' + type + '&richdocuments_filename=' + encodeURI(value))
+					const url = generateUrl('/apps/files/?dir=' + dir + '&richdocuments_create=' + type + '&richdocuments_filename=' + encodeURI(value))
 					window.open(url, '_blank')
 				}
 			},
@@ -601,7 +603,7 @@ export default {
 
 	loggingContext() {
 		return {
-			currentUser: OC.getCurrentUser()?.uid,
+			currentUser: getCurrentUser()?.uid,
 			file: {
 				sharingToken: document.getElementById('sharingToken')?.value,
 				fileId: this.fileId,

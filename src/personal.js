@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import { generateFilePath } from '@nextcloud/router'
 import '../css/admin.scss'
 
 $(function() {
@@ -41,7 +42,7 @@ $(function() {
 	PersonalSettings.prototype._updateSetting = function(data, successCallback, errorCallback) {
 		OC.msg.startAction('#documents-admin-msg', t('richdocuments', 'Saving…'))
 		const request = new XMLHttpRequest()
-		request.open('POST', OC.filePath('richdocuments', 'ajax', 'personal.php'), true)
+		request.open('POST', generateFilePath('richdocuments', 'ajax', 'personal.php'), true)
 		request.setRequestHeader('Content-Type', 'application/json')
 		request.setRequestHeader('requesttoken', OC.requestToken)
 		request.onload = function() {

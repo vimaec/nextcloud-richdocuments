@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import Vue from 'vue'
+import { generateUrl } from '@nextcloud/router'
 import AdminSettings from './components/AdminSettings'
 import '../css/admin.scss'
 
@@ -100,7 +101,7 @@ function initTemplateManager() {
 	// fileupload plugin
 	$('#richdocuments-templates').fileupload({
 		dataType: 'json',
-		url: OC.generateUrl('apps/richdocuments/template'),
+		url: generateUrl('apps/richdocuments/template'),
 		type: 'POST',
 
 		add(e, data) {

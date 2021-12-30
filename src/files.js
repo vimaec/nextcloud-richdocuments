@@ -4,6 +4,7 @@ import '../css/files.scss'
 import $ from 'jquery'
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
+import { generateUrl, generateOcsUrl, generateFilePath, imagePath } from '@nextcloud/router'
 import { getDocumentUrlFromTemplate, getDocumentUrlForPublicFile, getDocumentUrlForFile } from './helpers/url'
 import PostMessageService from './services/postMessage.tsx'
 import Config from './services/config.tsx'
@@ -57,7 +58,7 @@ const odfViewer = {
 				mime,
 				EDIT_ACTION_NAME,
 				OC.PERMISSION_READ,
-				OC.imagePath('core', 'actions/rename'),
+				imagePath('core', 'actions/rename'),
 				(fileName, context) => {
 					// Workaround since the new template frontend doesn't pass
 					// the full context yet nor the filelist contains the element
@@ -102,7 +103,7 @@ const odfViewer = {
 		let templateId
 
 		if (!odfViewer.isCollaboraConfigured) {
-			$.get(OC.linkToOCS('cloud') + '/capabilities?format=json').then(
+			$.get(generateOcsUrl('cloud') + '/capabilities?format=json').then(
 				e => {
 					if ((OC.getCapabilities().richdocuments.config.wopi_url.indexOf('proxy.php') !== -1)
 						|| (typeof e.ocs.data.capabilities.richdocuments.collabora === 'object'
@@ -110,7 +111,7 @@ const odfViewer = {
 						odfViewer.isCollaboraConfigured = true
 						odfViewer.onEdit(fileName, context)
 					} else {
-						const setupUrl = OC.generateUrl('/settings/admin/richdocuments')
+						const setupUrl = generateUrl('/settings/admin/richdocuments')
 						const installHint = OC.isUserAdmin()
 							? `<a href="${setupUrl}">Collabora Online is not setup yet. <br />Click here to configure your own server or connect to a demo server.</a>`
 							: t('richdocuments', 'Collabora Online is not setup yet. Please contact your administrator.')
@@ -185,8 +186,8 @@ const odfViewer = {
 				// only redirect if remote file, not opened though reload and csp blocks the request
 				if (shareOwnerId.substr(lastIndex).indexOf('/') !== -1 && fileId !== preloadId) {
 					canAccessCSP('https://' + shareOwnerId.substr(lastIndex) + '/ocs/v2.php/apps/richdocuments/api/v1/federation', () => {
-						console.debug('Cannot load federated instance though CSP, navigating to ', OC.generateUrl('/apps/richdocuments/open?fileId=' + fileId))
-						window.location = OC.generateUrl('/apps/richdocuments/open?fileId=' + fileId)
+						console.debug('Cannot load federated instance though CSP, navigating to ', generateUrl('/apps/richdocuments/open?fileId=' + fileId))
+						window.location = generateUrl('/apps/richdocuments/open?fileId=' + fileId)
 					})
 				}
 			}
@@ -197,7 +198,7 @@ const odfViewer = {
 			reloadForFederationCSP(fileName, context?.shareOwnerId)
 		}
 
-		$('head').append($('<link rel="stylesheet" type="text/css" href="' + OC.filePath('richdocuments', 'css', 'mobile.css') + '"/>'))
+		$('head').append($('<link rel="stylesheet" type="text/css" href="' + generateFilePath('richdocuments', 'css', 'mobile.css') + '"/>'))
 
 		const $iframe = $('<iframe id="richdocumentsframe" nonce="' + btoa(OC.requestToken) + '" scrolling="no" allowfullscreen src="' + documentUrl + '" />')
 		odfViewer.loadingTimeout = setTimeout(odfViewer.onTimeout,
@@ -359,7 +360,7 @@ $(document).ready(function() {
 		}
 	}
 
-	OC.MimeType._mimeTypeIcons['application/vnd.oasis.opendocument.graphics'] = OC.imagePath('richdocuments', 'x-office-draw')
+	OC.MimeType._mimeTypeIcons['application/vnd.oasis.opendocument.graphics'] = imagePath('richdocuments', 'x-office-draw')
 
 	// Open the template picker if there was a create parameter detected on load
 	if (Preload.create && Preload.create.type && Preload.create.filename) {

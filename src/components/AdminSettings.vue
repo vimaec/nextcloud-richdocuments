@@ -351,7 +351,7 @@
 import Vue from 'vue'
 import { showWarning } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateFilePath } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import axios from '@nextcloud/axios'
@@ -396,7 +396,7 @@ export default {
 			CODECompatible: true,
 			CODEAppID: 'richdocumentscode',
 			isNginx: false,
-			appUrl: OC.generateUrl('/settings/apps/app-bundles/richdocumentscode'),
+			appUrl: generateUrl('/settings/apps/app-bundles/richdocumentscode'),
 			approvedDemoModal: false,
 			updating: false,
 			groups: [],
@@ -487,7 +487,7 @@ export default {
 			this.CODECompatible = this.CODECompatible && supportedArchs.includes(this.initial.platform)
 		}
 		if (this.initial.platform && this.initial.platform === 'aarch64') {
-			this.appUrl = OC.generateUrl('/settings/apps/app-bundles/richdocumentscode_arm64')
+			this.appUrl = generateUrl('/settings/apps/app-bundles/richdocumentscode_arm64')
 			this.CODEInstalled = 'richdocumentscode_arm64' in OC.appswebroots
 			this.CODEAppID = 'richdocumentscode_arm64'
 		}
@@ -583,7 +583,7 @@ export default {
 			this.updating = true
 			try {
 				const result = await axios.post(
-					OC.filePath('richdocuments', 'ajax', 'admin.php'),
+					generateFilePath('richdocuments', 'ajax', 'admin.php'),
 					data
 				)
 				this.updating = false
@@ -595,7 +595,7 @@ export default {
 		},
 		checkIfDemoServerIsActive() {
 			this.settings.demoUrl = this.demoServers ? this.demoServers.find((server) => server.demo_url === this.settings.wopi_url) : null
-			this.settings.CODEUrl = this.CODEInstalled ? window.location.protocol + '//' + window.location.host + OC.filePath(this.CODEAppID, '', '') + 'proxy.php?req=' : null
+			this.settings.CODEUrl = this.CODEInstalled ? window.location.protocol + '//' + window.location.host + generateFilePath(this.CODEAppID, '', '') + 'proxy.php?req=' : null
 			if (this.settings.wopi_url && this.settings.wopi_url !== '') {
 				this.serverMode = 'custom'
 			}
