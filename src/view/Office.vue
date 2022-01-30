@@ -148,7 +148,7 @@ export default {
 		errorMessage() {
 			switch (parseInt(this.error)) {
 			case LOADING_ERROR.COLLABORA_UNCONFIGURED:
-				return t('richdocuments', '{productName} is not configured', { productName: loadState('richdocuments', 'productName', 'Nextcloud Office') })
+				return t('richdocuments', '{productName} is not configured', { productName: loadState('richdocuments', 'productName', 'VIM Office') })
 			case LOADING_ERROR.PROXY_FAILED:
 				return t('richdocuments', 'Starting the built-in CODE server failed')
 			default:
@@ -197,7 +197,7 @@ export default {
 			this.loadingTimeout = setTimeout(() => {
 				console.error('FAILED')
 				this.loading = LOADING_STATE.FAILED
-				this.error = t('richdocuments', 'Failed to load {productName} - please try again later', { productName: loadState('richdocuments', 'productName', 'Nextcloud Office') })
+				this.error = t('richdocuments', 'Failed to load {productName} - please try again later', { productName: loadState('richdocuments', 'productName', 'VIM Office') })
 			}, (OC.getCapabilities().richdocuments.config.timeout * 1000 || 15000))
 		},
 		documentReady() {

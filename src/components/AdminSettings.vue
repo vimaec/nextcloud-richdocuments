@@ -25,7 +25,7 @@
 		<div class="section">
 			<h2>{{ productName }}</h2>
 			<p v-if="hasNextcloudBranding">
-				{{ t('richdocuments', 'Nextcloud Office is a powerful Collabora Online based online office suite with collaborative editing, which supports all major documents, spreadsheet and presentation file formats and works together with all modern browsers.') }}
+				{{ t('richdocuments', 'VIM Office is a powerful Collabora Online based online office suite with collaborative editing, which supports all major documents, spreadsheet and presentation file formats and works together with all modern browsers.') }}
 			</p>
 			<p v-else>
 				{{ t('richdocuments', 'Collabora Online is a powerful LibreOffice-based online office suite with collaborative editing, which supports all major documents, spreadsheet and presentation file formats and works together with all modern browsers.') }}
@@ -67,7 +67,7 @@
 						:disabled="updating">
 					<label for="customserver">{{ t('richdocuments', 'Use your own server') }}</label><br>
 					<p class="option-inline">
-						<em>{{ t('richdocuments', 'Nextcloud Office requires a seperate server running Collabora Online to provide editing capabilities.') }}</em>
+						<em>{{ t('richdocuments', 'VIM Office requires a seperate server running Collabora Online to provide editing capabilities.') }}</em>
 						<em>{{ t('richdocuments', 'Collabora Online requires a seperate server acting as a WOPI-like Client to provide editing capabilities.') }}</em>
 					</p>
 					<div v-if="serverMode === 'custom'" class="option-inline">
@@ -384,7 +384,7 @@ export default {
 	},
 	data() {
 		return {
-			productName: loadState('richdocuments', 'productName', 'Nextcloud Office'),
+			productName: loadState('richdocuments', 'productName', 'VIM Office'),
 			hasNextcloudBranding: loadState('richdocuments', 'hasNextcloudBranding', true),
 
 			serverMode: '',
