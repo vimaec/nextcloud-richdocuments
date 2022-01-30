@@ -102,7 +102,7 @@ class CapabilitiesService {
 			return $this->capabilitites['productName'];
 		}
 
-		return $this->l10n->t('Nextcloud Office');
+		return $this->l10n->t('VIM Office');
 	}
 
 	public function clear(): void {
